@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chryst Afangbedji Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .section-header {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #111827;
+        }
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            background-color: #111827;
+            color: #f3f4f6;
+            padding: 1rem 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            user-select: none;
+        }
+        .marquee-text {
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+        .project-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .contact-link {
+            transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .contact-link:hover {
+            color: #3b82f6;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 lg:p-12">
+
+    <!-- Header & Navigation -->
+    <header class="flex justify-between items-center py-6 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="text-3xl font-extrabold text-gray-900">
+            Chryst.Cyber
+        </div>
+        <nav>
+            <ul class="flex space-x-4 md:space-x-8 text-lg font-medium">
+                <li><a href="#summary" class="hover:text-blue-600 transition-colors duration-300">Summary</a></li>
+                <li><a href="#education" class="hover:text-blue-600 transition-colors duration-300">Education</a></li>
+                <li><a href="#projects" class="hover:text-blue-600 transition-colors duration-300">Projects</a></li>
+                <li><a href="#certifications" class="hover:text-blue-600 transition-colors duration-300">Certifications</a></li>
+                <li><a href="#contact" class="hover:text-blue-600 transition-colors duration-300">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="max-w-7xl mx-auto px-4 md:px-8">
+
+        <!-- Hero Section -->
+        <section class="min-h-[70vh] flex flex-col justify-center items-center text-center">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight tracking-tight">
+                Chryst Afangbedji
+            </h1>
+            <p class="text-2xl md:text-3xl text-gray-600 mt-4 max-w-2xl">
+                Cybersecurity Analyst in training with a passion for
+                <span class="font-bold text-blue-600">secure software development</span>,
+                <span class="font-bold text-blue-600">threat intelligence</span>, and
+                <span class="font-bold text-blue-600">vulnerability analysis</span>.
+            </p>
+        </section>
+
+        <!-- Marquee Section -->
+        <div class="marquee-container my-12">
+            <div class="marquee-text">
+                &nbsp;&bull; Cybersecurity &bull; Penetration Testing &bull; Python &bull; Nmap &bull; Wireshark &bull; Kali Linux &bull;
+                &nbsp;&bull; Cybersecurity &bull; Penetration Testing &bull; Python &bull; Nmap &bull; Wireshark &bull; Kali Linux &bull;
+            </div>
+        </div>
+
+        <!-- Professional Summary Section -->
+        <section id="summary" class="py-16 md:py-24">
+            <h2 class="section-header text-center mb-12">Professional Summary</h2>
+            <div class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                <p class="text-gray-600 leading-relaxed text-lg">
+                    Detail-oriented Cybersecurity Analyst | Aspiring Threat Hunter in training with hands-on experience in penetration testing, threat analysis, and risk mitigation. I am skilled in vulnerability detection, incident response, and secure software development. Seeking to apply technical expertise and problem-solving skills in an internship or entry-level security role.
+                </p>
+            </div>
+        </section>
+
+        <!-- Education Section (NEW) -->
+        <section id="education" class="py-16 md:py-24">
+            <h2 class="section-header text-center mb-12">Education</h2>
+            <div class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                <h3 class="text-xl md:text-2xl font-semibold mb-2">Slippery Rock University</h3>
+                <p class="text-gray-600">
+                    B.S. Cybersecurity, Concentration in Secure Software Development <br>
+                    Expected May 2027
+                </p>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-16 md:py-24">
+            <h2 class="section-header text-center mb-12">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Project 1: Full Penetration Test -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">Full Penetration Test of a Simulated Network</h3>
+                    <p class="text-gray-600 mb-4">Conducted reconnaissance, scanning, exploitation, and post-exploitation on a lab environment. Delivered a professional penetration test report with vulnerabilities, exploits used, and remediation recommendations.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Penetration Testing</span>
+                </a>
+                <!-- Project 2: Exploitation of Web and Network Services -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">Exploitation of Web and Network Services</h3>
+                    <p class="text-gray-600 mb-4">Identified and exploited misconfigured services (FTP, SMB, HTTP) in a controlled environment. Demonstrated privilege escalation on Linux/Windows targets.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Web Exploitation</span>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Network Exploitation</span>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Privilege Escalation</span>
+                </a>
+                <!-- Project 3: Network Vulnerability Assessment -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">Network Vulnerability Assessment</h3>
+                    <p class="text-gray-600 mb-4">Used Nmap and Nessus/OpenVAS to discover services and vulnerabilities. Verified findings manually to reduce false positives.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Vulnerability Assessment</span>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Nmap</span>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Nessus/OpenVAS</span>
+                </a>
+                <!-- Project 4: Web Application Testing Lab -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">Web Application Testing Lab</h3>
+                    <p class="text-gray-600 mb-4">Performed SQL Injection, XSS, and authentication bypass on vulnerable web apps (DVWA, Juice Shop, etc.). Documented exploitation steps and mitigation strategies.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Web Application Testing</span>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">SQL Injection</span>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">XSS</span>
+                </a>
+                <!-- Project 5: Privilege Escalation Walkthroughs -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">Privilege Escalation Walkthroughs</h3>
+                    <p class="text-gray-600 mb-4">Practiced privilege escalation techniques (kernel exploits, misconfigurations, weak permissions). Compiled a methodology checklist for future assessments.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Post-Exploitation</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="py-16 md:py-24">
+            <h2 class="section-header text-center mb-12">Certifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Certification 1 -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">eLearnSecurity Junior Penetration Tester (eJPT)</h3>
+                    <p class="text-gray-600 mb-4">Issued by INE, August 2025.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Penetration Testing</span>
+                </a>
+                <!-- Certification 2 -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">National Centers of Academic Excellence in Cybersecurity Cyber Defense</h3>
+                    <p class="text-gray-600 mb-4">Issued by the National Security Agency (NSA).</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Cyber Defense</span>
+                </a>
+                <!-- Certification 3 -->
+                <a href="#" class="project-card block p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl">
+                    <h3 class="text-xl md:text-2xl font-semibold mb-2">CompTIA Security+</h3>
+                    <p class="text-gray-600 mb-4">Expected March 2026.</p>
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium">Cybersecurity</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 md:py-24 text-center">
+            <h2 class="section-header mb-12">Contact</h2>
+            <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-700">
+                Let's connect and build something secure together.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 text-xl font-medium">
+                <a href="mailto:cea1013@sru.edu" class="contact-link flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <span>Email</span>
+                </a>
+                <a href="https://www.linkedin.com/in/chryst-afangbedji" target="_blank" class="contact-link flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="tel:412-320-6422" class="contact-link flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2h-1.64a19.09 19.09 0 0 1-5.59-3.21l-1.34-1.34a.99.99 0 0 0-.7-.29.99.99 0 0 0-.7.29l-1.34 1.34A19.09 19.09 0 0 1 2.08 6.22a2 2 0 0 1 2-2.18h3a2 2 0 0 1 2 2a11.08 11.08 0 0 0 11.08 11.08z"></path></svg>
+                    <span>(412)-320-6422</span>
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>
