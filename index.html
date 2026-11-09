@@ -24,18 +24,19 @@
     --cyan:#49c2d1;          /* signal cyan */
     --amber:#e3a751;         /* status amber */
     --green:#5bc98d;         /* ok */
+    --red:#ef6f6c;           /* high severity / offense */
     color-scheme:dark;
   }
   :root[data-theme="light"]{
     --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef1f5; --line:#dde3ea;
     --fg:#141b24; --muted:#5a6a79; --faint:#8a99a8;
-    --cyan:#0e8fa6; --amber:#b4772a; --green:#1f9a5f; color-scheme:light;
+    --cyan:#0e8fa6; --amber:#b4772a; --green:#1f9a5f; --red:#c8433f; color-scheme:light;
   }
   @media (prefers-color-scheme: light){
     :root:not([data-theme="dark"]){
       --bg:#f4f6f8; --surface:#ffffff; --surface-2:#eef1f5; --line:#dde3ea;
       --fg:#141b24; --muted:#5a6a79; --faint:#8a99a8;
-      --cyan:#0e8fa6; --amber:#b4772a; --green:#1f9a5f; color-scheme:light;
+      --cyan:#0e8fa6; --amber:#b4772a; --green:#1f9a5f; --red:#c8433f; color-scheme:light;
     }
   }
 
@@ -202,10 +203,97 @@
   .copyline{margin-top:16px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--faint);display:flex;flex-wrap:wrap;gap:6px 16px}
   .copyline span{color:var(--muted)}
 
+  /* ---- hero console: simulated alert feed replaying the home labs ---- */
+  .hero-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:34px;align-items:center;margin-bottom:26px}
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;gap:26px} }
+  .hero-grid .hero-cta{margin-bottom:0}
+  .console{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0;
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    box-shadow:0 24px 60px -36px color-mix(in srgb,var(--cyan) 55%,transparent);
+  }
+  .console-bar{display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--surface-2);color:var(--faint)}
+  .console-bar i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .console-bar .title{margin-left:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .console-bar .live{margin-left:auto;color:var(--green);display:inline-flex;align-items:center;gap:6px}
+  .console-bar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2.4s infinite}
+  .feed{list-style:none;margin:0;padding:10px 12px;height:228px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
+    -webkit-mask-image:linear-gradient(to bottom,transparent,#000 22%);mask-image:linear-gradient(to bottom,transparent,#000 22%)}
+  .feed li{display:grid;grid-template-columns:auto auto 1fr;gap:8px;line-height:1.45;color:var(--muted);animation:feedin .4s ease}
+  .feed .t{color:var(--faint)}
+  .feed b{color:var(--cyan);font-weight:500}
+  .feed em{font-style:normal;color:var(--green)}
+  .sev{font-weight:600;letter-spacing:.3px}
+  .sev.h{color:var(--red)} .sev.m{color:var(--amber)} .sev.l{color:var(--faint)}
+  @keyframes feedin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .console-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);background:var(--surface-2)}
+  .console-stats div{padding:9px 12px;color:var(--faint);border-left:1px solid var(--line)}
+  .console-stats div:first-child{border-left:none}
+  .console-stats b{display:block;font-size:17px;color:var(--fg);font-weight:600}
+
+  /* ---- ATT&CK coverage map ---- */
+  .attack-note{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:66ch}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);margin-bottom:18px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend span::before{content:"";width:11px;height:11px;border-radius:3px;border:1px solid var(--line)}
+  .legend .lg-red::before{background:color-mix(in srgb,var(--red) 30%,var(--surface));border-color:var(--red)}
+  .legend .lg-blue::before{background:color-mix(in srgb,var(--cyan) 30%,var(--surface));border-color:var(--cyan)}
+  .legend .lg-both::before{background:linear-gradient(135deg,color-mix(in srgb,var(--red) 40%,var(--surface)) 50%,color-mix(in srgb,var(--cyan) 40%,var(--surface)) 50%);border-color:var(--amber)}
+  .matrix{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+  @media (max-width:860px){ .matrix{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  @media (max-width:520px){ .matrix{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  .tactic{display:flex;flex-direction:column;gap:7px}
+  .tname{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--fg);font-weight:600;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .tname span{display:block;color:var(--faint);font-weight:400}
+  .tech{
+    text-align:left;font:inherit;font-size:12.5px;line-height:1.35;cursor:pointer;color:var(--fg);
+    border:1px solid var(--line);border-radius:7px;padding:8px 9px;background:var(--surface);
+    transition:transform .15s ease,border-color .15s ease;
+  }
+  .tech code{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);margin-bottom:2px}
+  .tech.red{background:color-mix(in srgb,var(--red) 14%,var(--surface));border-color:color-mix(in srgb,var(--red) 55%,var(--line))}
+  .tech.blue{background:color-mix(in srgb,var(--cyan) 14%,var(--surface));border-color:color-mix(in srgb,var(--cyan) 55%,var(--line))}
+  .tech.both{background:linear-gradient(135deg,color-mix(in srgb,var(--red) 16%,var(--surface)),color-mix(in srgb,var(--cyan) 16%,var(--surface)));border-color:color-mix(in srgb,var(--amber) 60%,var(--line))}
+  .tech:hover,.tech[aria-pressed="true"]{transform:translateY(-2px);border-color:var(--fg)}
+  .techinfo{margin-top:16px;background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:13px 15px;font-size:14px;color:var(--muted);min-height:74px}
+  .techinfo .tid{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--amber);margin-right:8px}
+  .techinfo b{color:var(--fg);font-weight:600}
+  .techinfo p{margin:4px 0 0}
+
+  /* ---- interactive shell ---- */
+  .term{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-family:"IBM Plex Mono",monospace;font-size:13px}
+  .term-out{height:300px;overflow-y:auto;padding:14px 16px 6px;color:var(--muted);white-space:pre-wrap;word-break:break-word;line-height:1.55}
+  .term-out .echo{color:var(--fg)}
+  .term-out .ok{color:var(--green)}
+  .term-out .err{color:var(--red)}
+  .term-out .hl{color:var(--cyan)}
+  .term-in{display:none;align-items:center;gap:9px;padding:10px 16px 14px}
+  .js .term-in{display:flex}
+  .term-in label{color:var(--green);white-space:nowrap}
+  .term-in input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--fg);font:inherit;caret-color:var(--cyan)}
+  .term-quick{display:none;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .js .term-quick{display:flex}
+  .term-quick button{font-family:"IBM Plex Mono",monospace;font-size:12px;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:5px 9px}
+  .term-quick button:hover{color:var(--fg);border-color:var(--cyan)}
+  kbd{font-family:"IBM Plex Mono",monospace;font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--fg)}
+
+  /* ---- motion: scroll reveal + cursor glow on lab cards ---- */
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  .proj{overflow:hidden}
+  .proj::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s ease;
+    background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--cyan) 13%,transparent),transparent 70%);
+  }
+  .proj:hover::before{opacity:1}
+
   footer{border-top:1px solid var(--line);padding-block:26px;margin-top:8px}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint)}
 
-  @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .js .reveal{opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
@@ -216,7 +304,9 @@
     <nav class="nav">
       <a href="#about" class="hide-sm">about</a>
       <a href="#path" class="hide-sm">path</a>
-      <a href="#projects" class="hide-sm">projects</a>
+      <a href="#projects" class="hide-sm">labs</a>
+      <a href="#attack" class="hide-sm">att&amp;ck</a>
+      <a href="#shell">shell</a>
       <a href="#contact">contact</a>
       <button class="themebtn" id="themebtn" type="button" aria-label="Toggle color theme">theme</button>
     </nav>
@@ -225,17 +315,36 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="kicker"><span class="pulse"></span>~/soc-analyst-track &nbsp;·&nbsp; open to work</span>
-    <h1>Chryst Afangbedji</h1>
-    <p class="role">Aspiring Cybersecurity / SOC Analyst <span class="arrow">&rarr;</span> future Detection Engineer<span class="cursor" aria-hidden="true"></span></p>
-    <p class="lede">
-      Entry-level <b>SOC / Cybersecurity Analyst</b> with real enterprise alert-triage reps and a home lab
-      full of <b>Splunk</b> and <b>Sentinel</b> detections, growing toward detection engineering.
-    </p>
-    <div class="hero-cta">
-      <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>Download résumé</a>
-      <a class="btn" href="#contact">Hire me</a>
+    <div class="hero-grid">
+      <div>
+        <span class="kicker"><span class="pulse"></span>~/soc-analyst-track &nbsp;·&nbsp; open to work</span>
+        <h1 id="name" aria-label="Chryst Afangbedji">Chryst Afangbedji</h1>
+        <p class="role">Aspiring Cybersecurity / SOC Analyst <span class="arrow">&rarr;</span> future Detection Engineer<span class="cursor" aria-hidden="true"></span></p>
+        <p class="lede">
+          Entry-level <b>SOC / Cybersecurity Analyst</b> with real enterprise alert-triage reps and a home lab
+          full of <b>Splunk</b> and <b>Sentinel</b> detections, growing toward detection engineering.
+        </p>
+        <div class="hero-cta">
+          <a class="btn primary" href="resume.pdf" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>Download résumé</a>
+          <a class="btn" href="#contact">Hire me</a>
+        </div>
+      </div>
+
+      <aside class="console" aria-label="Simulated alert feed replaying detections from my home labs">
+        <div class="console-bar"><i></i><i></i><i></i><span class="title">soc-feed &middot; lab replay (simulated)</span><span class="live">replay</span></div>
+        <ol class="feed" id="feed" aria-hidden="true">
+          <li><span class="t">09:41:07</span><span class="sev h">HIGH</span><span><b>snort</b> ET SCAN Nmap SYN scan from 203.0.113.66 <em>&rarr; splunk</em></span></li>
+          <li><span class="t">09:41:12</span><span class="sev m">MED</span><span><b>pfsense</b> blocked inbound 445/tcp on WAN <em>dropped</em></span></li>
+          <li><span class="t">09:41:20</span><span class="sev h">HIGH</span><span><b>sentinel</b> 4625 failed logon &times;312 from 198.51.100.23 <em>IOC extracted</em></span></li>
+          <li><span class="t">09:41:31</span><span class="sev m">MED</span><span><b>mimecast</b> credential-harvest link in inbound mail <em>held &middot; user notified</em></span></li>
+        </ol>
+        <div class="console-stats">
+          <div><b id="st-ev">4</b>events</div>
+          <div><b id="st-hi">2</b>high</div>
+          <div><b id="st-esc">0</b>escalated</div>
+        </div>
+      </aside>
     </div>
     <div class="chips">
       <a class="chip" href="mailto:afangbedjichryst05@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>afangbedjichryst05@gmail.com</a>
@@ -410,10 +519,47 @@
     </div>
   </section>
 
+  <!-- ATT&CK COVERAGE -->
+  <section id="attack">
+    <div class="wrap">
+      <div class="sechead"><span class="num">05</span><h2>att&amp;ck coverage</h2><span class="meta">select a technique</span></div>
+      <p class="attack-note">The MITRE ATT&amp;CK techniques I've worked hands-on, from both sides: run as the attacker in offensive labs, or caught and handled as the defender at work and in my SIEM labs.</p>
+      <div class="legend"><span class="lg-red">executed (offense)</span><span class="lg-blue">detected / defended</span><span class="lg-both">both sides</span></div>
+      <div class="matrix">
+        <div class="tactic">
+          <div class="tname">Reconnaissance<span>TA0043</span></div>
+          <button type="button" class="tech both" data-id="T1595" data-note="Ran Nmap scans against lab targets, then built the other side: Snort on pfSense flags the same scans and forwards the alerts to Splunk."><code>T1595</code>Active Scanning</button>
+        </div>
+        <div class="tactic">
+          <div class="tname">Initial Access<span>TA0001</span></div>
+          <button type="button" class="tech red" data-id="T1190" data-note="Exploited misconfigured FTP, SMB, and HTTP services with Metasploit on Kali Linux in an isolated lab."><code>T1190</code>Exploit Public-Facing App</button>
+          <button type="button" class="tech blue" data-id="T1566" data-note="Pitt Ohio internship: phishing analysis and email threat triage in the Mimecast admin console, cutting the phishing that reached users."><code>T1566</code>Phishing</button>
+        </div>
+        <div class="tactic">
+          <div class="tname">Privilege Escalation<span>TA0004</span></div>
+          <button type="button" class="tech red" data-id="T1068" data-note="Escalated privileges on Linux and Windows lab targets after initial exploitation."><code>T1068</code>Exploitation for Priv-Esc</button>
+        </div>
+        <div class="tactic">
+          <div class="tname">Credential Access<span>TA0006</span></div>
+          <button type="button" class="tech blue" data-id="T1110" data-note="Azure honeypot: Microsoft Sentinel and KQL over thousands of failed logons (Event ID 4625), attacker IPs extracted as IOCs and geo-mapped in a workbook."><code>T1110</code>Brute Force</button>
+        </div>
+        <div class="tactic">
+          <div class="tname">Discovery<span>TA0007</span></div>
+          <button type="button" class="tech both" data-id="T1046" data-note="Enumerated open services with Nmap during offensive labs; the perimeter lab's IDS rules alert on that same service sweep."><code>T1046</code>Network Service Discovery</button>
+        </div>
+        <div class="tactic">
+          <div class="tname">Defense Evasion<span>TA0005</span></div>
+          <button type="button" class="tech blue" data-id="T1078" data-note="Active Directory lab: isolated admin rights in a dedicated privileged account; at Pitt Ohio, provisioned and managed access across Entra ID and AD."><code>T1078</code>Valid Accounts</button>
+        </div>
+      </div>
+      <div class="techinfo" id="techinfo" aria-live="polite"><span class="tid">T1595</span><b>Active Scanning</b><p>Ran Nmap scans against lab targets, then built the other side: Snort on pfSense flags the same scans and forwards the alerts to Splunk.</p></div>
+    </div>
+  </section>
+
   <!-- SKILLS -->
   <section id="skills">
     <div class="wrap">
-      <div class="sechead"><span class="num">05</span><h2>toolset</h2><span class="meta">what I do, hands-on</span></div>
+      <div class="sechead"><span class="num">06</span><h2>toolset</h2><span class="meta">what I do, hands-on</span></div>
       <div class="skills">
         <div class="skillrow">
           <div class="label">SIEM &amp; Detection</div>
@@ -435,6 +581,29 @@
           <p class="desc">Automate setup and triage with Python, PowerShell, and Bash, and sharpen the attacker's view on Hack The Box.</p>
           <div class="items"><span>Kali Linux</span><span>Ubuntu</span><span>Metasploit</span><span>Hack The Box</span><span>ServiceNow</span><span>Python</span><span>PowerShell</span><span>Bash</span></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHELL -->
+  <section id="shell">
+    <div class="wrap">
+      <div class="sechead"><span class="num">07</span><h2>shell</h2><span class="meta">press <kbd>/</kbd> to focus</span></div>
+      <div class="term">
+        <div class="term-out" id="termout" aria-live="polite">Rather poke around than scroll? Type <span class="hl">help</span> to see what this shell can do.
+<noscript>The shell needs JavaScript, but everything it shows is also on this page.</noscript></div>
+        <form class="term-in" id="termform" autocomplete="off">
+          <label for="termin">chryst@soc:~$</label>
+          <input id="termin" type="text" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="Shell command">
+        </form>
+      </div>
+      <div class="term-quick" aria-label="Quick commands">
+        <button type="button" data-cmd="help">help</button>
+        <button type="button" data-cmd="whoami">whoami</button>
+        <button type="button" data-cmd="certs">certs</button>
+        <button type="button" data-cmd="exp">exp</button>
+        <button type="button" data-cmd="labs">labs</button>
+        <button type="button" data-cmd="resume">resume</button>
       </div>
     </div>
   </section>
