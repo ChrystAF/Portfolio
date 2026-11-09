@@ -150,7 +150,8 @@
     select(techs[0]);
   }
 
-  // Interactive shell
+  // Interactive shell. Nothing typed here is ever executed: input only selects one of the fixed
+  // commands in CMDS, and all output is written with textContent, never parsed as HTML.
   var out = document.getElementById("termout");
   var form = document.getElementById("termform");
   var input = document.getElementById("termin");
@@ -240,15 +241,18 @@
     };
     var VISIBLE = ["help", "whoami", "certs", "exp", "labs", "skills", "attack", "resume", "contact", "theme", "clear"];
 
+    var MAX_INPUT = 64;
     var run = function (raw) {
-      var cmd = raw.trim();
+      var cmd = String(raw).slice(0, MAX_INPUT).trim();
       print("chryst@soc:~$ " + cmd, "echo");
       if (cmd) {
         history.push(cmd);
+        if (history.length > 50) history.shift();
         hpos = history.length;
         var parts = cmd.split(/\s+/);
         var name = parts[0].toLowerCase();
-        if (Object.prototype.hasOwnProperty.call(CMDS, name)) CMDS[name](parts.slice(1).join(" "));
+        // Only plain lowercase words can name a command (rules out __proto__, constructor, etc.)
+        if (/^[a-z]+$/.test(name) && Object.prototype.hasOwnProperty.call(CMDS, name)) CMDS[name](parts.slice(1).join(" "));
         else print("command not found: " + name + " · try 'help'", "err");
       }
       out.scrollTop = out.scrollHeight;
