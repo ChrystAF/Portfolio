@@ -2,7 +2,7 @@
 
 A fast, single-page portfolio/resume site for an aspiring **SOC / Cybersecurity Analyst** working toward **Detection Engineering**. No build step, no dependencies, just one `index.html` you can drop on any static host.
 
-**Live site:** https://chrystaf.github.io/Resume-Website/
+**Live site:** https://chrystaf.github.io/Portfolio/
 
 <!-- Add a screenshot: save one to docs/preview.png, then uncomment the next line.
 ![Site preview](docs/preview.png)
