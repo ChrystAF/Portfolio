@@ -21,9 +21,9 @@ I'm a cybersecurity student at Slippery Rock University (NSA CAE program) with h
 - **Responsive:** works from a 400px phone to a wide desktop; no horizontal scroll.
 - **Accessible:** keyboard focus states, active-section nav, reduced-motion support, real contrast in both themes.
 
-## Add your résumé PDF
+## Résumé PDF
 
-The hero's **Download résumé** button links to `resume.pdf` at the repo root. Export your resume to PDF, name it `resume.pdf`, and drop it in this folder so the button works.
+The hero's **Download résumé** button links to [`resume.pdf`](resume.pdf) at the repo root. To update it, export the new resume to PDF, overwrite `resume.pdf`, and push.
 
 ## Tech
 
