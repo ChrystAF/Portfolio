@@ -15,6 +15,8 @@ I'm a cybersecurity student at Slippery Rock University (NSA CAE program) with h
 
 ## Highlights
 
+- **One page at a time:** each section is its own view (`#about`, `#certs`, `#path`, ...) with a side panel and previous / next links, so nothing is buried in a long scroll.
+- **Certificates on the page:** the eJPT and Security+ certificates display in the certs section and open full size in a lightbox.
 - **MITRE ATT&CK coverage map:** the techniques I've executed or detected, each tied to the lab or job where it happened.
 - **SOC alert feed:** the hero replays simulated detections from my home labs (Snort, Sentinel, Mimecast, Splunk).
 - **Zero dependencies:** plain semantic HTML + CSS + one small vanilla-JS file, loads instantly.
