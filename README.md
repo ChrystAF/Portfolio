@@ -36,24 +36,6 @@ The hero's **Download résumé** button links to [`resume.pdf`](resume.pdf) at t
 | Security | Content Security Policy, `noopener noreferrer`, HTTPS |
 | Hosting | GitHub Pages |
 
-## Run locally
-
-Clone and open the file, that's it:
-
-```bash
-git clone https://github.com/ChrystAF/Resume-Website.git
-cd Resume-Website
-# open index.html in a browser, or serve it:
-python -m http.server 8000   # then visit http://localhost:8000
-```
-
-## Deploy (GitHub Pages)
-
-1. Push this repo to GitHub.
-2. **Settings → Pages → Build and deployment → Source: Deploy from a branch.**
-3. Select branch `main` and folder `/ (root)`, then **Save**.
-4. Your site publishes at `https://<username>.github.io/Resume-Website/` in a minute or two.
-
 ## License
 
 Code is released under the [MIT License](LICENSE). Resume content and personal information are © Chryst Afangbedji.
