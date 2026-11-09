@@ -56,27 +56,63 @@
   a:hover{text-decoration:underline}
   :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px}
 
-  /* ---- top bar ---- */
-  .topbar{
-    position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
-    background:color-mix(in srgb, var(--bg) 86%, transparent);
-    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  /* ---- side panel: fixed on desktop, slide-out drawer on small screens ---- */
+  :root{--side:236px}
+  .page{margin-left:var(--side)}
+  .side{
+    position:fixed;top:0;bottom:0;left:0;width:var(--side);z-index:30;
+    display:flex;flex-direction:column;overflow-y:auto;
+    padding:max(30px, env(safe-area-inset-top,0px)) 18px max(22px, env(safe-area-inset-bottom,0px)) max(18px, env(safe-area-inset-left,0px));
+    background:var(--surface);border-right:1px solid var(--line);
+    transition:transform .25s ease, visibility .25s;
   }
-  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
-  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:12px;gap:12px}
-  .brand{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;letter-spacing:.3px;color:var(--fg)}
+  .brand{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px;letter-spacing:.3px;color:var(--fg);padding-left:12px}
+  .brand:hover{text-decoration:none}
   .brand .dot{color:var(--cyan)}
-  .nav{display:flex;gap:18px;align-items:center}
-  .nav a{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted)}
-  .nav a:hover{color:var(--fg);text-decoration:none}
-  .nav a[aria-current]{color:var(--cyan)}
-  @media (max-width:720px){ .nav a.hide-sm{display:none} }
-  .themebtn{
-    font-family:"IBM Plex Mono",monospace;font-size:12px;cursor:pointer;
-    background:var(--surface);color:var(--muted);border:1px solid var(--line);
-    border-radius:6px;padding:5px 9px;line-height:1;
+  .side .tagline{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint);margin:4px 0 30px;padding-left:12px}
+  .nav{display:flex;flex-direction:column;gap:3px}
+  .nav a{
+    display:flex;align-items:center;gap:11px;font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--muted);
+    padding:9px 12px;border-radius:8px;border-left:2px solid transparent;
   }
+  .nav a svg{width:16px;height:16px;flex:none}
+  .nav a .n{margin-left:auto;font-size:11px;color:var(--faint)}
+  .nav a:hover{color:var(--fg);background:var(--surface-2);text-decoration:none}
+  .nav a[aria-current]{color:var(--cyan);background:color-mix(in srgb,var(--cyan) 10%,transparent);border-left-color:var(--cyan)}
+  .side-foot{margin-top:auto;padding-top:24px;display:flex;flex-direction:column;gap:12px}
+  .side-social{display:flex;gap:8px;padding-left:12px}
+  .side-social a{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;color:var(--muted)}
+  .side-social a:hover{color:var(--cyan);border-color:var(--cyan)}
+  .side-social svg{width:16px;height:16px}
+  .themebtn{
+    display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;cursor:pointer;
+    background:var(--surface-2);color:var(--muted);border:1px solid var(--line);
+    border-radius:8px;padding:9px 10px;line-height:1;
+  }
+  .themebtn svg{width:15px;height:15px}
   .themebtn:hover{color:var(--fg);border-color:var(--cyan)}
+  .navtoggle{
+    display:none;position:fixed;z-index:40;width:42px;height:42px;align-items:center;justify-content:center;
+    top:calc(12px + env(safe-area-inset-top,0px));right:max(14px, env(safe-area-inset-right,0px));
+    background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:9px;cursor:pointer;
+  }
+  .navtoggle svg{width:20px;height:20px}
+  .navtoggle .x{display:none}
+  .navtoggle[aria-expanded="true"] .x{display:block}
+  .navtoggle[aria-expanded="true"] .bars{display:none}
+  .scrim{display:none}
+  @media (max-width:960px){
+    .page{margin-left:0}
+    .js .side{transform:translateX(-100%);visibility:hidden;box-shadow:0 0 70px rgba(0,0,0,.5)}
+    .js .side.open{transform:none;visibility:visible}
+    .js .navtoggle{display:flex}
+    .js .scrim{display:block;position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+    .js .scrim.open{opacity:1;pointer-events:auto}
+    /* without JS the panel just sits above the page as a plain menu */
+    html:not(.js) .side{position:static;width:auto;border-right:none;border-bottom:1px solid var(--line)}
+    html:not(.js) .side-foot{display:none}
+  }
 
   /* ---- hero ---- */
   .hero{padding-block:clamp(44px,8vw,86px) clamp(26px,5vw,42px)}
@@ -205,7 +241,7 @@
 
   /* ---- hero console: simulated alert feed replaying the home labs ---- */
   .hero-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:34px;align-items:center;margin-bottom:26px}
-  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;gap:26px} }
+  @media (max-width:1100px){ .hero-grid{grid-template-columns:1fr;gap:26px} }
   .hero-grid .hero-cta{margin-bottom:0}
   .console{
     background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0;
@@ -240,7 +276,7 @@
   .legend .lg-blue::before{background:color-mix(in srgb,var(--cyan) 30%,var(--surface));border-color:var(--cyan)}
   .legend .lg-both::before{background:linear-gradient(135deg,color-mix(in srgb,var(--red) 40%,var(--surface)) 50%,color-mix(in srgb,var(--cyan) 40%,var(--surface)) 50%);border-color:var(--amber)}
   .matrix{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
-  @media (max-width:860px){ .matrix{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  @media (max-width:1100px){ .matrix{grid-template-columns:repeat(3,minmax(0,1fr))} }
   @media (max-width:520px){ .matrix{grid-template-columns:repeat(2,minmax(0,1fr))} }
   .tactic{display:flex;flex-direction:column;gap:7px}
   .tname{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--fg);font-weight:600;padding-bottom:6px;border-bottom:1px solid var(--line)}
@@ -259,23 +295,6 @@
   .techinfo .tid{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--amber);margin-right:8px}
   .techinfo b{color:var(--fg);font-weight:600}
   .techinfo p{margin:4px 0 0}
-
-  /* ---- interactive shell ---- */
-  .term{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-family:"IBM Plex Mono",monospace;font-size:13px}
-  .term-out{height:300px;overflow-y:auto;padding:14px 16px 6px;color:var(--muted);white-space:pre-wrap;word-break:break-word;line-height:1.55}
-  .term-out .echo{color:var(--fg)}
-  .term-out .ok{color:var(--green)}
-  .term-out .err{color:var(--red)}
-  .term-out .hl{color:var(--cyan)}
-  .term-in{display:none;align-items:center;gap:9px;padding:10px 16px 14px}
-  .js .term-in{display:flex}
-  .term-in label{color:var(--green);white-space:nowrap}
-  .term-in input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--fg);font:inherit;caret-color:var(--cyan)}
-  .term-quick{display:none;flex-wrap:wrap;gap:7px;margin-top:12px}
-  .js .term-quick{display:flex}
-  .term-quick button{font-family:"IBM Plex Mono",monospace;font-size:12px;cursor:pointer;background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:5px 9px}
-  .term-quick button:hover{color:var(--fg);border-color:var(--cyan)}
-  kbd{font-family:"IBM Plex Mono",monospace;font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--fg)}
 
   /* ---- motion: scroll reveal + cursor glow on lab cards ---- */
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
@@ -298,22 +317,34 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="wrap">
-    <span class="brand">chryst<span class="dot">.</span>afangbedji</span>
-    <nav class="nav">
-      <a href="#about" class="hide-sm">about</a>
-      <a href="#path" class="hide-sm">path</a>
-      <a href="#projects" class="hide-sm">labs</a>
-      <a href="#attack" class="hide-sm">att&amp;ck</a>
-      <a href="#shell">shell</a>
-      <a href="#contact">contact</a>
-      <button class="themebtn" id="themebtn" type="button" aria-label="Toggle color theme">theme</button>
-    </nav>
-  </div>
-</div>
+<button class="navtoggle" id="navtoggle" type="button" aria-controls="side" aria-expanded="false" aria-label="Menu">
+  <svg class="bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+</button>
+<div class="scrim" id="scrim"></div>
 
-<header class="hero">
+<aside class="side" id="side">
+  <a class="brand" href="#top">chryst<span class="dot">.</span>afangbedji</a>
+  <div class="tagline">soc analyst &middot; detection</div>
+  <nav class="nav" aria-label="Sections">
+    <a href="#about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>about<span class="n">01</span></a>
+    <a href="#path"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><path d="M6 8v8M11 6h9M11 18h9"/></svg>path<span class="n">03</span></a>
+    <a href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/></svg>labs<span class="n">04</span></a>
+    <a href="#attack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>att&amp;ck<span class="n">05</span></a>
+    <a href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>contact</a>
+  </nav>
+  <div class="side-foot">
+    <div class="side-social">
+      <a href="https://www.linkedin.com/in/chryst-afangbedji" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9z"/></svg></a>
+      <a href="https://github.com/ChrystAF" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.7s.8-.3 2.7 1a9.3 9.3 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.8v2.6c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg></a>
+      <a href="resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="Résumé (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg></a>
+    </div>
+    <button class="themebtn" id="themebtn" type="button" aria-label="Toggle color theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>theme</button>
+  </div>
+</aside>
+
+<div class="page">
+<header class="hero" id="top">
   <div class="wrap">
     <div class="hero-grid">
       <div>
@@ -585,29 +616,6 @@
     </div>
   </section>
 
-  <!-- SHELL -->
-  <section id="shell">
-    <div class="wrap">
-      <div class="sechead"><span class="num">07</span><h2>shell</h2><span class="meta">press <kbd>/</kbd> to focus</span></div>
-      <div class="term">
-        <div class="term-out" id="termout" aria-live="polite">Rather poke around than scroll? Type <span class="hl">help</span> to see what this shell can do.
-<noscript>The shell needs JavaScript, but everything it shows is also on this page.</noscript></div>
-        <form class="term-in" id="termform" autocomplete="off">
-          <label for="termin">chryst@soc:~$</label>
-          <input id="termin" type="text" maxlength="64" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="Shell command">
-        </form>
-      </div>
-      <div class="term-quick" aria-label="Quick commands">
-        <button type="button" data-cmd="help">help</button>
-        <button type="button" data-cmd="whoami">whoami</button>
-        <button type="button" data-cmd="certs">certs</button>
-        <button type="button" data-cmd="exp">exp</button>
-        <button type="button" data-cmd="labs">labs</button>
-        <button type="button" data-cmd="resume">resume</button>
-      </div>
-    </div>
-  </section>
-
   <!-- CONTACT -->
   <section id="contact">
     <div class="wrap">
@@ -632,6 +640,7 @@
     <span>built with html &middot; hosted on github pages</span>
   </div>
 </footer>
+</div>
 
 <script src="app.js" defer></script>
 </body>

@@ -15,7 +15,6 @@ I'm a cybersecurity student at Slippery Rock University (NSA CAE program) with h
 
 ## Highlights
 
-- **Interactive shell:** a working terminal on the page (`help`, `whoami`, `certs`, `labs`, `resume`, ...); press `/` to jump in.
 - **MITRE ATT&CK coverage map:** the techniques I've executed or detected, each tied to the lab or job where it happened.
 - **SOC alert feed:** the hero replays simulated detections from my home labs (Snort, Sentinel, Mimecast, Splunk).
 - **Zero dependencies:** plain semantic HTML + CSS + one small vanilla-JS file, loads instantly.
