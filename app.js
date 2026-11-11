@@ -1,5 +1,5 @@
 /* Chryst Afangbedji resume site
-   Progressive enhancement: theme toggle, one-view-at-a-time pages, name decrypt,
+   Progressive enhancement: theme toggle, one-view-at-a-time pages, home-view decrypt,
    simulated SOC feed, ATT&CK map, certificate lightbox.
    The page renders and reads fully (as one long scroll) with JavaScript disabled. */
 (function () {
@@ -50,6 +50,44 @@
     });
   }
 
+  // Every line of text on the home view "decrypts" from noise each time the view is shown.
+  // The live feed and its counters are left alone so the replay keeps its own state.
+  var decryptHome = function () {};
+  var home = document.getElementById("home");
+  if (home && !reduce && document.createTreeWalker) {
+    var glyphs = "0123456789ABCDEF#$%&*<>/";
+    var walker = document.createTreeWalker(home, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        var skip = !/\S/.test(n.nodeValue) || n.parentNode.closest("svg, #feed, .console-stats");
+        return skip ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var parts = [];
+    for (var tn = walker.nextNode(); tn; tn = walker.nextNode()) parts.push({ node: tn, text: tn.nodeValue });
+    var run = 0;
+    decryptHome = function () {
+      var id = ++run, t0 = Date.now();
+      var step = function () {
+        if (id !== run) return;
+        var ts = Date.now();
+        var done = true;
+        parts.forEach(function (p, k) {
+          var prog = Math.min(Math.max((ts - t0 - k * 20) / Math.min(500 + p.text.length * 8, 1100), 0), 1);
+          if (prog < 1) done = false;
+          var keep = Math.floor(prog * p.text.length);
+          var out = p.text.slice(0, keep);
+          for (var i = keep; i < p.text.length; i++) {
+            var ch = p.text.charAt(i);
+            out += /\s/.test(ch) ? ch : glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+          }
+          p.node.nodeValue = out;
+        });
+        if (!done) setTimeout(step, 35);
+      };
+      step();
+    };
+  }
+
   // One page on screen at a time: the URL hash (#about, #certs, ...) picks which view shows
   var views = Array.prototype.slice.call(document.querySelectorAll(".view"));
   var navLinks = document.querySelectorAll(".nav a[href^='#']");
@@ -89,27 +127,12 @@
       });
       window.scrollTo(0, 0);
       if (moveFocus) target.focus({ preventScroll: true });
+      if (target === home) decryptHome();
     };
     window.addEventListener("hashchange", function () { show(true); });
     show(false);
-  }
-
-  // Name "decrypts" from noise on load
-  var nameEl = document.getElementById("name");
-  if (nameEl && !reduce) {
-    var target = nameEl.textContent;
-    var glyphs = "0123456789ABCDEF#$%&*<>/";
-    var frame = 0;
-    (function tick() {
-      var out = "";
-      for (var i = 0; i < target.length; i++) {
-        var ch = target.charAt(i);
-        out += (ch === " " || i < frame / 2) ? ch : glyphs.charAt(Math.floor(Math.random() * glyphs.length));
-      }
-      nameEl.textContent = out;
-      if (frame++ < target.length * 2) setTimeout(tick, 30);
-      else nameEl.textContent = target;
-    })();
+  } else {
+    decryptHome();
   }
 
   // Simulated SOC feed replaying the home-lab detections (documentation-range IPs only)
@@ -181,29 +204,6 @@
       b.addEventListener("mouseenter", function () { select(b); });
     });
     select(techs[0]);
-  }
-
-  // Count the hero stats up the first time they come into view
-  var counters = document.querySelectorAll("[data-count]");
-  if (counters.length && "IntersectionObserver" in window && !reduce && window.requestAnimationFrame) {
-    var co = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        co.unobserve(en.target);
-        var el = en.target;
-        var end = +el.getAttribute("data-count");
-        var suffix = el.getAttribute("data-suffix") || "";
-        var t0 = null;
-        var step = function (ts) {
-          if (t0 === null) t0 = ts;
-          var p = Math.min((ts - t0) / 1200, 1);
-          el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + suffix;
-          if (p < 1) requestAnimationFrame(step);
-        };
-        requestAnimationFrame(step);
-      });
-    }, { threshold: 0.5 });
-    Array.prototype.forEach.call(counters, function (c) { co.observe(c); });
   }
 
   // Cursor glow on lab cards
