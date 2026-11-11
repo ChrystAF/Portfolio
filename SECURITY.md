@@ -1,14 +1,14 @@
 # Security
 
-This is a static, client-only site: no backend, no database, no user accounts, and no form that submits data anywhere. That removes most common web risk by design. On top of that, a few hardening measures are in place:
+This is a static, client-only site with no backend, no database, no user accounts, and no form that submits data anywhere. That design removes most common web risks. On top of that, a few hardening measures are in place.
 
 ## What's in place
 
 - **HTTPS everywhere.** Served over TLS by GitHub Pages. Enable **Settings → Pages → Enforce HTTPS** so HTTP is redirected.
 - **Content Security Policy.** A strict CSP (`<meta http-equiv="Content-Security-Policy">` in `index.html`) that:
-  - blocks all plugins and embedding (`object-src 'none'`, `frame-ancestors 'none'`, which stops clickjacking),
+  - blocks all plugins (`object-src 'none'`). It also lists `frame-ancestors 'none'`, but browsers ignore that directive in a `<meta>` tag, so clickjacking protection needs a real HTTP header (see below),
   - pins scripts to same-origin only (`script-src 'self'`, so no inline script execution, which blocks the most common XSS vector),
-  - restricts styles/fonts to this origin and Google Fonts,
+  - restricts styles and fonts to this origin and Google Fonts,
   - locks down `base-uri` and `form-action`, and upgrades any insecure requests.
 - **No inline JavaScript.** All behavior lives in `app.js`, so the CSP can forbid inline scripts outright.
 - **Referrer policy** set to `strict-origin-when-cross-origin`.
@@ -17,7 +17,7 @@ This is a static, client-only site: no backend, no database, no user accounts, a
 
 ## Note on headers
 
-GitHub Pages doesn't let you set custom HTTP response headers (e.g. `X-Content-Type-Options`, `Strict-Transport-Security`). The policies above are delivered via `<meta>` where the platform supports it. For full header control, host behind a CDN/proxy such as Cloudflare Pages or Netlify.
+GitHub Pages doesn't let you set custom HTTP response headers (for example `X-Content-Type-Options`, `Strict-Transport-Security`, or `X-Frame-Options`). The policies above are delivered via `<meta>` where the platform supports it. For full header control, host behind a CDN/proxy such as Cloudflare Pages or Netlify.
 
 ## Reporting
 
