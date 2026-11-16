@@ -145,20 +145,25 @@
       return true;
     };
     var wheelLock = false;
+    var wheelTimer = null;
+    var relock = function () {
+      wheelLock = true;
+      clearTimeout(wheelTimer);
+      // Release only once the wheel stream goes quiet, so trailing momentum
+      // after a jump can't fire a second navigation (the scroll "hitch").
+      wheelTimer = setTimeout(function () { wheelLock = false; }, 500);
+    };
     window.addEventListener("wheel", function (ev) {
-      if (wheelLock || ev.ctrlKey || Math.abs(ev.deltaY) < 4) return;
+      if (ev.ctrlKey || Math.abs(ev.deltaY) < 4) return;
       if (document.querySelector("dialog[open]") || (side && side.classList.contains("open"))) return;
+      if (wheelLock) { ev.preventDefault(); relock(); return; }
       var doc = document.documentElement;
       var atBottom = window.innerHeight + Math.ceil(window.scrollY) >= doc.scrollHeight - 2;
       var atTop = window.scrollY <= 2;
       var moved = false;
       if (ev.deltaY > 0 && atBottom) moved = step(1);
       else if (ev.deltaY < 0 && atTop) moved = step(-1);
-      if (moved) {
-        ev.preventDefault();
-        wheelLock = true;
-        setTimeout(function () { wheelLock = false; }, 650);
-      }
+      if (moved) { ev.preventDefault(); relock(); }
     }, { passive: false });
   } else {
     decryptHome();
