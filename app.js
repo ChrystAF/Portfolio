@@ -131,6 +131,35 @@
     };
     window.addEventListener("hashchange", function () { show(true); });
     show(false);
+
+    // Scroll wheel traverses between sections, one section per gesture.
+    // If a section is taller than the viewport, the wheel scrolls through it
+    // first and only flips to the next/previous view at the very top or bottom.
+    var step = function (dir) {
+      var curId = root.getAttribute("data-view");
+      var idx = 0;
+      views.forEach(function (v, i) { if (v.id === curId) idx = i; });
+      var next = idx + dir;
+      if (next < 0 || next >= views.length) return false;
+      location.hash = "#" + views[next].id;
+      return true;
+    };
+    var wheelLock = false;
+    window.addEventListener("wheel", function (ev) {
+      if (wheelLock || ev.ctrlKey || Math.abs(ev.deltaY) < 4) return;
+      if (document.querySelector("dialog[open]") || (side && side.classList.contains("open"))) return;
+      var doc = document.documentElement;
+      var atBottom = window.innerHeight + Math.ceil(window.scrollY) >= doc.scrollHeight - 2;
+      var atTop = window.scrollY <= 2;
+      var moved = false;
+      if (ev.deltaY > 0 && atBottom) moved = step(1);
+      else if (ev.deltaY < 0 && atTop) moved = step(-1);
+      if (moved) {
+        ev.preventDefault();
+        wheelLock = true;
+        setTimeout(function () { wheelLock = false; }, 650);
+      }
+    }, { passive: false });
   } else {
     decryptHome();
   }
