@@ -1,6 +1,6 @@
 # Chryst Afangbedji: Personal Résumé Site
 
-A fast, single-page portfolio and résumé site for an aspiring **SOC / Cybersecurity Analyst** working toward **detection engineering**. There is no build step and no dependencies: just `index.html` and `app.js`, which you can drop on any static host.
+A fast, single-page portfolio and résumé site for an aspiring **SOC / Cybersecurity Analyst** working toward **security engineering**. There is no build step and no dependencies: just `index.html` and `app.js`, which you can drop on any static host.
 
 **Live site:** https://chrystaf.github.io/Portfolio/
 
