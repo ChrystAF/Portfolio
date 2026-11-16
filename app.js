@@ -149,9 +149,11 @@
     var relock = function () {
       wheelLock = true;
       clearTimeout(wheelTimer);
-      // Release only once the wheel stream goes quiet, so trailing momentum
-      // after a jump can't fire a second navigation (the scroll "hitch").
-      wheelTimer = setTimeout(function () { wheelLock = false; }, 500);
+      // Release once the wheel has been quiet for a short beat. Trackpad inertia
+      // streams events ~16ms apart, so it keeps the lock held (no double jump),
+      // while real mouse-wheel ticks are spaced wider than this, so each tick
+      // flows straight through and the scroll stays responsive.
+      wheelTimer = setTimeout(function () { wheelLock = false; }, 110);
     };
     window.addEventListener("wheel", function (ev) {
       if (ev.ctrlKey || Math.abs(ev.deltaY) < 4) return;
